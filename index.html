@@ -407,7 +407,7 @@
       emoji: "🎢",
       name: "Attractiepark Slagharen",
       tagline: "Wilder Westen – 50+ Attraktionen für alle",
-      description: "Über 50 Attraktionen, 2 Achterbahnen, Wildwasserbahn, Shows und Ponyreiten. Triple Launch Coaster „Gold Rush" bis 95 km/h für die Mutigen, sanfte Fahrgeschäfte für die Kleinen. Wasserpark Aqua Mexicana mit 10 Rutschen optional (8 € Aufpreis).",
+      description: "Über 50 Attraktionen, 2 Achterbahnen, Wildwasserbahn, Shows und Ponyreiten. Triple Launch Coaster \u201eGold Rush\u201c bis 95 km/h für die Mutigen, sanfte Fahrgeschäfte für die Kleinen. Wasserpark Aqua Mexicana mit 10 Rutschen optional (8 \u20AC Aufpreis).",
       price: "20–36 € p.P. (online mind. 5 Tage vorher = bis 30% Rabatt) | Kinder unter 4 Jahren kostenlos",
       dogs: "✅ Ja, an der Leine erlaubt. Gassi-Bereich vorhanden, kostenlos.",
       website: "slagharen.com",
@@ -495,7 +495,7 @@
   function loadVotes() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-    } catch { return {}; }
+    } catch (e) { return {}; }
   }
   function saveVotes(votes) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
@@ -589,67 +589,87 @@
     return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
 
-  // ── REMOVE PARTICIPANT ────────────────────────
-  document.addEventListener("click", e => {
-    const btn = e.target.closest(".chip-remove");
-    if (!btn) return;
-    const id = btn.dataset.activity;
-    const name = btn.dataset.name;
-    if (!votes[id]) return;
-    votes[id] = votes[id].filter(n => n !== name);
-    saveVotes(votes);
-    renderParticipants(id);
-    updateSummary();
-  });
-
   // ── BUILD CARDS ───────────────────────────────
   function buildCards() {
-    const container = document.getElementById("activity-list");
-    container.innerHTML = ACTIVITIES.map(act => {
-      const rainClass = act.rain ? " rain" : "";
-      const rainBadge = act.rain ? `<span class="rain-badge">🌧️ Regenalternative</span>` : "";
-      const hintHtml  = act.hint ? `<div class="card-hint">💡 ${escHtml(act.hint)}</div>` : "";
-      return `
-        <div class="card${rainClass}" id="card-${act.id}">
-          <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-${act.id}" onclick="toggleCard('${act.id}')" onkeydown="keyToggle(event,'${act.id}')">
-            <span class="card-emoji">${act.emoji}</span>
-            <div class="card-title-wrap">
-              <div class="card-title">${escHtml(act.name)}</div>
-              <div class="card-tagline">${escHtml(act.tagline)}</div>
-            </div>
-            <div class="card-right">
-              ${rainBadge}
-              <span class="chevron">▼</span>
-            </div>
-          </div>
-          <div class="card-body" id="body-${act.id}">
-            <p class="card-description">${escHtml(act.description)}</p>
-            <div class="card-meta">
-              <div class="meta-row"><span class="meta-label">Preis:</span><span>${escHtml(act.price)}</span></div>
-              <div class="meta-row"><span class="meta-label">Hunde:</span><span>${escHtml(act.dogs)}</span></div>
-            </div>
-            ${hintHtml}
-            <a class="card-link" href="https://${act.website}" target="_blank" rel="noopener noreferrer">🌐 ${escHtml(act.website)}</a>
-            <button class="btn-join" onclick="openModal('${act.id}')">Ich bin dabei! 🙋</button>
-            <div class="participants" id="participants-${act.id}"></div>
-          </div>
-        </div>`;
-    }).join("");
-
-    ACTIVITIES.forEach(act => renderParticipants(act.id));
+    var container = document.getElementById("activity-list");
+    if (!container) return;
+    var html = "";
+    for (var i = 0; i < ACTIVITIES.length; i++) {
+      var act = ACTIVITIES[i];
+      var rainClass = act.rain ? " rain" : "";
+      var rainBadge = act.rain ? '<span class="rain-badge">\uD83C\uDF27\uFE0F Regenalternative</span>' : "";
+      var hintHtml  = act.hint ? '<div class="card-hint">\uD83D\uDCA1 ' + escHtml(act.hint) + '</div>' : "";
+      html += '<div class="card' + rainClass + '" id="card-' + act.id + '">';
+      html += '<div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-' + act.id + '" data-toggle="' + act.id + '">';
+      html += '<span class="card-emoji">' + act.emoji + '</span>';
+      html += '<div class="card-title-wrap">';
+      html += '<div class="card-title">' + escHtml(act.name) + '</div>';
+      html += '<div class="card-tagline">' + escHtml(act.tagline) + '</div>';
+      html += '</div>';
+      html += '<div class="card-right">' + rainBadge + '<span class="chevron">&#9660;</span></div>';
+      html += '</div>'; // card-header
+      html += '<div class="card-body" id="body-' + act.id + '">';
+      html += '<p class="card-description">' + escHtml(act.description) + '</p>';
+      html += '<div class="card-meta">';
+      html += '<div class="meta-row"><span class="meta-label">Preis:</span><span>' + escHtml(act.price) + '</span></div>';
+      html += '<div class="meta-row"><span class="meta-label">Hunde:</span><span>' + escHtml(act.dogs) + '</span></div>';
+      html += '</div>';
+      html += hintHtml;
+      html += '<a class="card-link" href="https://' + act.website + '" target="_blank" rel="noopener noreferrer">\uD83C\uDF10 ' + escHtml(act.website) + '</a>';
+      html += '<button class="btn-join" data-join="' + act.id + '">Ich bin dabei! \uD83D\uDE4B</button>';
+      html += '<div class="participants" id="participants-' + act.id + '"></div>';
+      html += '</div>'; // card-body
+      html += '</div>'; // card
+    }
+    container.innerHTML = html;
+    for (var j = 0; j < ACTIVITIES.length; j++) {
+      renderParticipants(ACTIVITIES[j].id);
+    }
   }
 
   // ── ACCORDION ────────────────────────────────
   function toggleCard(id) {
-    const card   = document.getElementById(`card-${id}`);
-    const header = card.querySelector(".card-header");
-    const isOpen = card.classList.contains("open");
+    var card   = document.getElementById("card-" + id);
+    var header = card.querySelector(".card-header");
+    var isOpen = card.classList.contains("open");
     card.classList.toggle("open", !isOpen);
-    header.setAttribute("aria-expanded", String(!isOpen));
+    header.setAttribute("aria-expanded", isOpen ? "false" : "true");
   }
-  function keyToggle(e, id) {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(id); }
-  }
+
+  // ── GLOBAL CLICK DELEGATION ───────────────────
+  document.addEventListener("click", function(e) {
+    // accordion toggle
+    var header = e.target.closest("[data-toggle]");
+    if (header) { toggleCard(header.getAttribute("data-toggle")); return; }
+
+    // join button
+    var joinBtn = e.target.closest("[data-join]");
+    if (joinBtn) { openModal(joinBtn.getAttribute("data-join")); return; }
+
+    // remove chip
+    var removeBtn = e.target.closest(".chip-remove");
+    if (removeBtn) {
+      var id   = removeBtn.getAttribute("data-activity");
+      var name = removeBtn.getAttribute("data-name");
+      if (votes[id]) {
+        votes[id] = votes[id].filter(function(n) { return n !== name; });
+        saveVotes(votes);
+        renderParticipants(id);
+        updateSummary();
+      }
+      return;
+    }
+
+    // close modal on overlay click
+    if (e.target === overlay) { closeModal(); }
+  });
+
+  // keyboard: open accordion on Enter / Space
+  document.addEventListener("keydown", function(e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var header = e.target.closest("[data-toggle]");
+    if (header) { e.preventDefault(); toggleCard(header.getAttribute("data-toggle")); }
+  });
 
   // ── INIT ─────────────────────────────────────
   buildCards();
