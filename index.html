@@ -493,8 +493,9 @@
       max-width: 480px; margin: 0 auto;
       background: #fff8e6; border-bottom: 2px solid #e5b030;
       padding: 10px 16px; font-size: .82rem; color: #7a5a00;
-      display: flex; gap: 8px; align-items: flex-start;
+      display: none; gap: 8px; align-items: flex-start;
     }
+    .setup-banner.visible { display: flex; }
     .setup-banner a { color: var(--green-dark); font-weight: 700; }
 
     /* ── NAME-CHANGE MODAL ───────────────────── */
@@ -729,7 +730,7 @@
   // ── FIREBASE INIT ─────────────────────────────
   function initFirebase() {
     if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.databaseURL) {
-      document.getElementById("setup-banner").hidden = false;
+      document.getElementById("setup-banner").classList.add("visible");
       setSyncLabel("lokal", "");
       return;
     }
@@ -737,7 +738,7 @@
       firebase.initializeApp(FIREBASE_CONFIG);
       db = firebase.database();
     } catch(e) {
-      document.getElementById("setup-banner").hidden = false;
+      document.getElementById("setup-banner").classList.add("visible");
       setSyncLabel("lokal", "");
       return;
     }
