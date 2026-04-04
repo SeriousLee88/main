@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Drenthe Ausflüge – Familienabstimmung</title>
+  <!-- Firebase SDK (compat v10) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -475,6 +478,25 @@
     .result-names-empty { font-style: italic; }
     .result-me { color: var(--green-dark); font-weight: 700; }
 
+    /* ── SYNC INDICATOR ─────────────────────── */
+    .sync-dot {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 50%; margin-right: 5px; flex-shrink: 0;
+      background: #aaa;
+    }
+    .sync-dot.online  { background: #5cb85c; box-shadow: 0 0 5px #5cb85c; }
+    .sync-dot.offline { background: #e07b39; }
+    .sync-label { font-size: .75rem; opacity: .8; }
+
+    /* ── SETUP BANNER ────────────────────────── */
+    .setup-banner {
+      max-width: 480px; margin: 0 auto;
+      background: #fff8e6; border-bottom: 2px solid #e5b030;
+      padding: 10px 16px; font-size: .82rem; color: #7a5a00;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .setup-banner a { color: var(--green-dark); font-weight: 700; }
+
     /* ── NAME-CHANGE MODAL ───────────────────── */
     #name-change-overlay {
       display: none; position: fixed; inset: 0;
@@ -504,8 +526,18 @@
   <p>Stimmt ab – welche Aktivitäten wollt ihr machen?</p>
 </header>
 <div class="identity-bar">
+  <span class="sync-dot" id="sync-dot"></span>
+  <span class="sync-label" id="sync-label">lokal</span>
+  <span style="flex:1"></span>
   <span>Hallo, <strong id="identity-name"></strong>!</span>
   <button class="btn-edit-name" id="btn-edit-name" title="Namen ändern">✏️</button>
+</div>
+
+<!-- ══ SETUP BANNER (hidden once Firebase configured) ══ -->
+<div class="setup-banner" id="setup-banner" hidden>
+  ⚠️ <span>Abstimmungen werden nur <strong>lokal</strong> gespeichert – andere sehen sie nicht.
+  <a href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase einrichten</a>
+  und Config in <code>index.html</code> eintragen, um Echtzeit-Sync zu aktivieren.</span>
 </div>
 
 <!-- ══ TABS ══════════════════════════════════ -->
@@ -657,16 +689,90 @@
   var STORAGE_KEY  = "drenthe_votes_v1";
   var NAME_KEY     = "drenthe_user_name";
 
+  // ════════════════════════════════════════════
+  // FIREBASE CONFIG
+  // Trage hier deine Firebase-Konfiguration ein.
+  // Anleitung: siehe README / PR-Beschreibung.
+  // Ohne Config läuft die App lokal (nur dieses Gerät).
+  var FIREBASE_CONFIG = null;
+  // Beispiel – ersetze mit deinen echten Werten:
+  // var FIREBASE_CONFIG = {
+  //   apiKey:            "AIza...",
+  //   authDomain:        "mein-projekt.firebaseapp.com",
+  //   databaseURL:       "https://mein-projekt-default-rtdb.europe-west1.firebasedatabase.app",
+  //   projectId:         "mein-projekt",
+  //   storageBucket:     "mein-projekt.appspot.com",
+  //   messagingSenderId: "123456789",
+  //   appId:             "1:123:web:abc"
+  // };
+  // ════════════════════════════════════════════
+
   // ── STATE ────────────────────────────────────
   var userName = "";
   var votes    = {};
+  var db       = null;   // Firebase Realtime DB handle
+  var fbReady  = false;  // true once first Firebase snapshot arrived
 
-  function loadVotes() {
+  function loadLocalVotes() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
     catch(e) { return {}; }
   }
-  function saveVotes() {
+  function saveLocal() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+  }
+  function saveVotes() {
+    if (db) {
+      db.ref("votes").set(votes).catch(function() { saveLocal(); });
+    } else {
+      saveLocal();
+    }
+  }
+
+  // ── FIREBASE INIT ─────────────────────────────
+  function initFirebase() {
+    if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.databaseURL) {
+      document.getElementById("setup-banner").hidden = false;
+      setSyncLabel("lokal", "");
+      return;
+    }
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+    } catch(e) {
+      document.getElementById("setup-banner").hidden = false;
+      setSyncLabel("lokal", "");
+      return;
+    }
+
+    // Realtime listener — any change by anyone updates the UI immediately
+    db.ref("votes").on("value", function(snap) {
+      var data = snap.val();
+      votes = data && typeof data === "object" ? data : {};
+      saveLocal(); // keep local cache in sync
+      fbReady = true;
+      for (var i = 0; i < ACTIVITIES.length; i++) refreshCard(ACTIVITIES[i].id);
+      updateSummary();
+      var rt = document.getElementById("tab-results");
+      if (rt && !rt.hidden) renderResults();
+    }, function() {
+      setSyncLabel("offline", "offline");
+    });
+
+    // Connection status dot
+    db.ref(".info/connected").on("value", function(snap) {
+      if (snap.val()) {
+        setSyncLabel("online", "online");
+      } else {
+        setSyncLabel("offline", "offline");
+      }
+    });
+  }
+
+  function setSyncLabel(dotClass, text) {
+    var dot   = document.getElementById("sync-dot");
+    var label = document.getElementById("sync-label");
+    if (dot)   { dot.className = "sync-dot " + dotClass; }
+    if (label) { label.textContent = text || ""; }
   }
   function escHtml(str) {
     return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;")
@@ -680,7 +786,9 @@
   var nsBtn      = document.getElementById("ns-btn");
 
   function initApp() {
-    votes = loadVotes();
+    // Load local votes as initial state (overwritten by Firebase when ready)
+    votes = loadLocalVotes();
+    initFirebase();
     var saved = localStorage.getItem(NAME_KEY);
     if (saved && saved.trim()) {
       userName = saved.trim();
