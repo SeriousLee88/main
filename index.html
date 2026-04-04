@@ -347,31 +347,196 @@
       padding: 0 16px;
       line-height: 1.5;
     }
+
+    /* ── NAME SCREEN ─────────────────────────── */
+    #name-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, #2a5225 0%, #4a8e42 55%, #7dbc71 100%);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #name-screen.hidden { display: none; }
+    .ns-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px 28px 32px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.25);
+    }
+    .ns-leaf { font-size: 2.8rem; margin-bottom: 12px; }
+    .ns-card h1 { font-size: 1.5rem; color: var(--green-dark); margin-bottom: 8px; }
+    .ns-card p  { font-size: .88rem; color: var(--text-light); margin-bottom: 22px; line-height: 1.5; }
+    .ns-card input {
+      display: block; width: 100%;
+      border: 1.5px solid var(--beige-dark); border-radius: 10px;
+      padding: 13px 14px; font-size: 1.05rem; outline: none;
+      background: var(--beige); color: var(--text); text-align: center;
+      transition: border-color .15s;
+    }
+    .ns-card input:focus { border-color: var(--green-mid); background: var(--white); }
+    .ns-error { font-size: .8rem; color: #c0392b; min-height: 20px; margin-top: 6px; }
+    .ns-btn {
+      display: block; width: 100%; margin-top: 14px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      color: var(--white); border: none; border-radius: 10px;
+      padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: opacity .15s;
+    }
+    .ns-btn:active { opacity: .85; }
+
+    /* ── IDENTITY BAR ────────────────────────── */
+    .identity-bar {
+      max-width: 480px; margin: 0 auto;
+      background: var(--green-dark);
+      color: rgba(255,255,255,.9);
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 7px 16px;
+      font-size: .85rem;
+    }
+    .identity-bar strong { color: #fff; }
+    .btn-edit-name {
+      background: none; border: none; cursor: pointer;
+      font-size: .85rem; padding: 2px 4px; line-height: 1;
+      opacity: .75; transition: opacity .15s;
+    }
+    .btn-edit-name:hover { opacity: 1; }
+
+    /* ── TAB BAR ─────────────────────────────── */
+    .tab-bar {
+      max-width: 480px; margin: 0 auto;
+      display: flex; background: var(--white);
+      border-bottom: 2px solid var(--beige-dark);
+    }
+    .tab {
+      flex: 1; padding: 11px 8px; background: none; border: none;
+      font-size: .9rem; font-weight: 600; color: var(--text-light);
+      cursor: pointer; border-bottom: 3px solid transparent;
+      margin-bottom: -2px; transition: color .15s, border-color .15s;
+    }
+    .tab.active { color: var(--green-dark); border-bottom-color: var(--green-dark); }
+
+    /* ── VOTE BADGE (collapsed card) ─────────── */
+    .vote-badge {
+      font-size: .68rem; font-weight: 700;
+      background: var(--green-light); color: var(--green-dark);
+      border: 1px solid var(--green-mid); border-radius: 20px;
+      padding: 2px 7px; white-space: nowrap;
+    }
+
+    /* ── JOIN BUTTON – JOINED STATE ──────────── */
+    .btn-join.joined {
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: 2px solid var(--green-mid);
+    }
+
+    /* ── CHIP – OWN ──────────────────────────── */
+    .chip.chip-me {
+      background: var(--green-mid); color: var(--white);
+      border-color: var(--green-dark);
+    }
+    .chip.chip-me .chip-remove { color: var(--white); }
+
+    /* ── RESULTS TAB ─────────────────────────── */
+    #tab-results { max-width: 480px; margin: 0 auto; padding: 14px 12px 8px; }
+    .results-header {
+      text-align: center; font-size: .88rem; color: var(--text-light);
+      margin-bottom: 14px;
+    }
+    .results-header strong { color: var(--green-dark); font-size: 1.1rem; }
+    .results-empty {
+      text-align: center; color: var(--text-light);
+      font-size: .9rem; margin-top: 40px;
+    }
+    .results-list { display: flex; flex-direction: column; gap: 10px; }
+    .result-row {
+      background: var(--white); border-radius: var(--radius);
+      border: 1.5px solid var(--beige-dark);
+      padding: 12px 14px; box-shadow: var(--shadow);
+    }
+    .result-row.result-empty { opacity: .45; box-shadow: none; }
+    .result-top {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+    }
+    .result-emoji { font-size: 1.3rem; flex-shrink: 0; }
+    .result-name { flex: 1; font-size: .92rem; font-weight: 700; color: var(--green-dark); }
+    .result-count {
+      background: var(--green-dark); color: var(--white);
+      border-radius: 20px; padding: 2px 10px;
+      font-size: .85rem; font-weight: 700; flex-shrink: 0;
+    }
+    .result-names { font-size: .8rem; color: var(--text-light); line-height: 1.5; }
+    .result-names-empty { font-style: italic; }
+    .result-me { color: var(--green-dark); font-weight: 700; }
+
+    /* ── NAME-CHANGE MODAL ───────────────────── */
+    #name-change-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.45); z-index: 200;
+      align-items: flex-end; justify-content: center;
+    }
+    #name-change-overlay.active { display: flex; }
   </style>
 </head>
 <body>
 
+<!-- ══ NAME SCREEN ═══════════════════════════ -->
+<div id="name-screen" class="hidden">
+  <div class="ns-card">
+    <div class="ns-leaf">🌿</div>
+    <h1>Willkommen!</h1>
+    <p>Wie heißt du? So weiß die Familie, wer abgestimmt hat.</p>
+    <input type="text" id="ns-input" placeholder="z. B. Papa" maxlength="40" autocomplete="off" />
+    <div class="ns-error" id="ns-error"></div>
+    <button class="ns-btn" id="ns-btn">Los geht's! →</button>
+  </div>
+</div>
+
+<!-- ══ HEADER ════════════════════════════════ -->
 <header>
   <h1>🌿 Drenthe Ausflüge</h1>
   <p>Stimmt ab – welche Aktivitäten wollt ihr machen?</p>
 </header>
+<div class="identity-bar">
+  <span>Hallo, <strong id="identity-name"></strong>!</span>
+  <button class="btn-edit-name" id="btn-edit-name" title="Namen ändern">✏️</button>
+</div>
 
-<div class="summary" id="summary">0 von 20 Personen haben abgestimmt</div>
+<!-- ══ TABS ══════════════════════════════════ -->
+<div class="tab-bar">
+  <button class="tab active" data-tab="vote">🗳 Abstimmen</button>
+  <button class="tab" data-tab="results">📊 Ergebnisse</button>
+</div>
 
-<main id="activity-list"></main>
+<!-- ══ VOTE TAB ══════════════════════════════ -->
+<div id="tab-vote">
+  <div class="summary" id="summary">0 von 20 Personen haben abgestimmt</div>
+  <main id="activity-list"></main>
+</div>
+
+<!-- ══ RESULTS TAB ═══════════════════════════ -->
+<div id="tab-results" hidden>
+  <div id="results-content"></div>
+</div>
 
 <footer>Alle Preise Stand April 2026 – Änderungen vorbehalten.</footer>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<!-- ══ NAME-CHANGE MODAL ══════════════════════ -->
+<div id="name-change-overlay">
   <div class="modal">
-    <h2 id="modal-title">Wie heisst du?</h2>
-    <p id="modal-subtitle">Trage deinen Namen ein, um dich anzumelden.</p>
-    <input type="text" id="modal-input" placeholder="z. B. Papa" maxlength="40" autocomplete="off" />
-    <div class="modal-error" id="modal-error"></div>
+    <h2>Namen ändern</h2>
+    <p>Deine bestehenden Anmeldungen werden automatisch aktualisiert.</p>
+    <input type="text" id="nc-input" placeholder="Dein Name" maxlength="40" autocomplete="off" />
+    <div class="modal-error" id="nc-error"></div>
     <div class="modal-actions">
-      <button class="btn-cancel" id="modal-cancel">Abbrechen</button>
-      <button class="btn-confirm" id="modal-confirm">Ich bin dabei! 🙋</button>
+      <button class="btn-cancel" id="nc-cancel">Abbrechen</button>
+      <button class="btn-confirm" id="nc-confirm">Speichern</button>
     </div>
   </div>
 </div>
@@ -488,105 +653,139 @@
     }
   ];
 
-  const TOTAL_PEOPLE = 20;
-  const STORAGE_KEY = "drenthe_votes_v1";
+  var TOTAL_PEOPLE = 20;
+  var STORAGE_KEY  = "drenthe_votes_v1";
+  var NAME_KEY     = "drenthe_user_name";
 
   // ── STATE ────────────────────────────────────
+  var userName = "";
+  var votes    = {};
+
   function loadVotes() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-    } catch (e) { return {}; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e) { return {}; }
   }
-  function saveVotes(votes) {
+  function saveVotes() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
   }
-
-  let votes = loadVotes(); // { activityId: ["Papa", "Mama", ...] }
-
-  // ── MODAL STATE ──────────────────────────────
-  let pendingActivityId = null;
-  const overlay   = document.getElementById("modal-overlay");
-  const modalInput   = document.getElementById("modal-input");
-  const modalError   = document.getElementById("modal-error");
-  const modalSubtitle = document.getElementById("modal-subtitle");
-  const modalConfirm = document.getElementById("modal-confirm");
-  const modalCancel  = document.getElementById("modal-cancel");
-
-  function openModal(activityId) {
-    pendingActivityId = activityId;
-    const act = ACTIVITIES.find(a => a.id === activityId);
-    modalSubtitle.textContent = `Du meldest dich für „${act.name}" an.`;
-    modalInput.value = "";
-    modalError.textContent = "";
-    overlay.classList.add("active");
-    setTimeout(() => modalInput.focus(), 80);
+  function escHtml(str) {
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
 
-  function closeModal() {
-    overlay.classList.remove("active");
-    pendingActivityId = null;
-    modalInput.value = "";
-    modalError.textContent = "";
+  // ── NAME SCREEN ───────────────────────────────
+  var nameScreen = document.getElementById("name-screen");
+  var nsInput    = document.getElementById("ns-input");
+  var nsError    = document.getElementById("ns-error");
+  var nsBtn      = document.getElementById("ns-btn");
+
+  function initApp() {
+    votes = loadVotes();
+    var saved = localStorage.getItem(NAME_KEY);
+    if (saved && saved.trim()) {
+      userName = saved.trim();
+      startApp();
+    } else {
+      nameScreen.classList.remove("hidden");
+      setTimeout(function() { nsInput.focus(); }, 80);
+    }
   }
 
-  function confirmJoin() {
-    const name = modalInput.value.trim();
-    if (!name) {
-      modalError.textContent = "Bitte gib deinen Namen ein.";
-      modalInput.focus();
-      return;
-    }
-    if (!votes[pendingActivityId]) votes[pendingActivityId] = [];
-    const list = votes[pendingActivityId];
-    const nameLower = name.toLowerCase();
-    if (list.some(n => n.toLowerCase() === nameLower)) {
-      modalError.textContent = "Du bist bereits angemeldet!";
-      return;
-    }
-    list.push(name);
-    saveVotes(votes);
-    renderParticipants(pendingActivityId);
+  nsBtn.addEventListener("click", handleNameSubmit);
+  nsInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") handleNameSubmit();
+  });
+
+  function handleNameSubmit() {
+    var name = nsInput.value.trim();
+    if (!name) { nsError.textContent = "Bitte gib deinen Namen ein."; return; }
+    userName = name;
+    localStorage.setItem(NAME_KEY, userName);
+    nameScreen.classList.add("hidden");
+    startApp();
+  }
+
+  function startApp() {
+    document.getElementById("identity-name").textContent = userName;
+    buildCards();
     updateSummary();
-    closeModal();
   }
 
-  modalConfirm.addEventListener("click", confirmJoin);
-  modalCancel.addEventListener("click", closeModal);
-  overlay.addEventListener("click", e => { if (e.target === overlay) closeModal(); });
-  modalInput.addEventListener("keydown", e => { if (e.key === "Enter") confirmJoin(); });
+  // ── NAME CHANGE ───────────────────────────────
+  var ncOverlay = document.getElementById("name-change-overlay");
+  var ncInput   = document.getElementById("nc-input");
+  var ncError   = document.getElementById("nc-error");
+
+  document.getElementById("btn-edit-name").addEventListener("click", function() {
+    ncInput.value = userName;
+    ncError.textContent = "";
+    ncOverlay.classList.add("active");
+    setTimeout(function() { ncInput.focus(); ncInput.select(); }, 80);
+  });
+  document.getElementById("nc-cancel").addEventListener("click", function() {
+    ncOverlay.classList.remove("active");
+  });
+  document.getElementById("nc-confirm").addEventListener("click", handleNameChange);
+  ncInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") handleNameChange();
+  });
+
+  function handleNameChange() {
+    var newName = ncInput.value.trim();
+    if (!newName) { ncError.textContent = "Bitte gib einen Namen ein."; return; }
+    if (newName === userName) { ncOverlay.classList.remove("active"); return; }
+    var oldLower = userName.toLowerCase();
+    Object.keys(votes).forEach(function(id) {
+      for (var i = 0; i < votes[id].length; i++) {
+        if (votes[id][i].toLowerCase() === oldLower) votes[id][i] = newName;
+      }
+    });
+    userName = newName;
+    localStorage.setItem(NAME_KEY, userName);
+    saveVotes();
+    ncOverlay.classList.remove("active");
+    document.getElementById("identity-name").textContent = userName;
+    for (var i = 0; i < ACTIVITIES.length; i++) refreshCard(ACTIVITIES[i].id);
+    updateSummary();
+    if (!document.getElementById("tab-results").hidden) renderResults();
+  }
+
+  // ── VOTING ────────────────────────────────────
+  function isJoined(id) {
+    if (!votes[id]) return false;
+    var low = userName.toLowerCase();
+    for (var i = 0; i < votes[id].length; i++) {
+      if (votes[id][i].toLowerCase() === low) return true;
+    }
+    return false;
+  }
+
+  function toggleJoin(id) {
+    if (!votes[id]) votes[id] = [];
+    var low = userName.toLowerCase();
+    var idx = -1;
+    for (var i = 0; i < votes[id].length; i++) {
+      if (votes[id][i].toLowerCase() === low) { idx = i; break; }
+    }
+    if (idx === -1) {
+      votes[id].push(userName);
+    } else {
+      votes[id].splice(idx, 1);
+    }
+    saveVotes();
+    refreshCard(id);
+    updateSummary();
+    if (!document.getElementById("tab-results").hidden) renderResults();
+  }
 
   // ── SUMMARY ──────────────────────────────────
   function updateSummary() {
-    const allNames = new Set();
-    Object.values(votes).forEach(list => list.forEach(n => allNames.add(n.toLowerCase())));
-    const count = allNames.size;
+    var all = {};
+    Object.keys(votes).forEach(function(id) {
+      votes[id].forEach(function(n) { all[n.toLowerCase()] = true; });
+    });
     document.getElementById("summary").textContent =
-      `${count} von ${TOTAL_PEOPLE} Personen haben abgestimmt`;
-  }
-
-  // ── RENDER PARTICIPANTS ───────────────────────
-  function renderParticipants(id) {
-    const container = document.getElementById(`participants-${id}`);
-    if (!container) return;
-    const list = votes[id] || [];
-    if (list.length === 0) {
-      container.innerHTML = "";
-      return;
-    }
-    container.innerHTML =
-      `<div class="participants-label">🙋 Angemeldet (${list.length}):</div>` +
-      `<div class="chips">` +
-      list.map(name =>
-        `<span class="chip">
-          ${escHtml(name)}
-          <button class="chip-remove" aria-label="${escHtml(name)} entfernen" data-activity="${id}" data-name="${escHtml(name)}">✕</button>
-        </span>`
-      ).join("") +
-      `</div>`;
-  }
-
-  function escHtml(str) {
-    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+      Object.keys(all).length + " von " + TOTAL_PEOPLE + " Personen haben abgestimmt";
   }
 
   // ── BUILD CARDS ───────────────────────────────
@@ -595,36 +794,66 @@
     if (!container) return;
     var html = "";
     for (var i = 0; i < ACTIVITIES.length; i++) {
-      var act = ACTIVITIES[i];
-      var rainClass = act.rain ? " rain" : "";
-      var rainBadge = act.rain ? '<span class="rain-badge">\uD83C\uDF27\uFE0F Regenalternative</span>' : "";
-      var hintHtml  = act.hint ? '<div class="card-hint">\uD83D\uDCA1 ' + escHtml(act.hint) + '</div>' : "";
-      html += '<div class="card' + rainClass + '" id="card-' + act.id + '">';
-      html += '<div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-' + act.id + '" data-toggle="' + act.id + '">';
-      html += '<span class="card-emoji">' + act.emoji + '</span>';
-      html += '<div class="card-title-wrap">';
-      html += '<div class="card-title">' + escHtml(act.name) + '</div>';
-      html += '<div class="card-tagline">' + escHtml(act.tagline) + '</div>';
-      html += '</div>';
-      html += '<div class="card-right">' + rainBadge + '<span class="chevron">&#9660;</span></div>';
+      var a = ACTIVITIES[i];
+      var rc = a.rain ? " rain" : "";
+      var rb = a.rain ? '<span class="rain-badge">\uD83C\uDF27\uFE0F Regenalternative</span>' : "";
+      var hh = a.hint ? '<div class="card-hint">\uD83D\uDCA1 ' + escHtml(a.hint) + '</div>' : "";
+      html += '<div class="card' + rc + '" id="card-' + a.id + '">';
+      html += '<div class="card-header" role="button" tabindex="0" aria-expanded="false" data-toggle="' + a.id + '">';
+      html += '<span class="card-emoji">' + a.emoji + '</span>';
+      html += '<div class="card-title-wrap"><div class="card-title">' + escHtml(a.name) + '</div>';
+      html += '<div class="card-tagline">' + escHtml(a.tagline) + '</div></div>';
+      html += '<div class="card-right">' + rb;
+      html += '<span class="vote-badge" id="vbadge-' + a.id + '" hidden></span>';
+      html += '<span class="chevron">&#9660;</span></div>';
       html += '</div>'; // card-header
-      html += '<div class="card-body" id="body-' + act.id + '">';
-      html += '<p class="card-description">' + escHtml(act.description) + '</p>';
+      html += '<div class="card-body" id="body-' + a.id + '">';
+      html += '<p class="card-description">' + escHtml(a.description) + '</p>';
       html += '<div class="card-meta">';
-      html += '<div class="meta-row"><span class="meta-label">Preis:</span><span>' + escHtml(act.price) + '</span></div>';
-      html += '<div class="meta-row"><span class="meta-label">Hunde:</span><span>' + escHtml(act.dogs) + '</span></div>';
-      html += '</div>';
-      html += hintHtml;
-      html += '<a class="card-link" href="https://' + act.website + '" target="_blank" rel="noopener noreferrer">\uD83C\uDF10 ' + escHtml(act.website) + '</a>';
-      html += '<button class="btn-join" data-join="' + act.id + '">Ich bin dabei! \uD83D\uDE4B</button>';
-      html += '<div class="participants" id="participants-' + act.id + '"></div>';
-      html += '</div>'; // card-body
-      html += '</div>'; // card
+      html += '<div class="meta-row"><span class="meta-label">Preis:</span><span>' + escHtml(a.price) + '</span></div>';
+      html += '<div class="meta-row"><span class="meta-label">Hunde:</span><span>' + escHtml(a.dogs) + '</span></div>';
+      html += '</div>' + hh;
+      html += '<a class="card-link" href="https://' + a.website + '" target="_blank" rel="noopener noreferrer">\uD83C\uDF10 ' + escHtml(a.website) + '</a>';
+      html += '<button class="btn-join" id="bjoin-' + a.id + '" data-join="' + a.id + '"></button>';
+      html += '<div class="participants" id="parts-' + a.id + '"></div>';
+      html += '</div></div>';
     }
     container.innerHTML = html;
-    for (var j = 0; j < ACTIVITIES.length; j++) {
-      renderParticipants(ACTIVITIES[j].id);
+    for (var j = 0; j < ACTIVITIES.length; j++) refreshCard(ACTIVITIES[j].id);
+  }
+
+  function refreshCard(id) {
+    // button
+    var btn = document.getElementById("bjoin-" + id);
+    if (btn) {
+      if (isJoined(id)) {
+        btn.textContent = "\u2713 Du bist dabei \u2013 Abmelden";
+        btn.className = "btn-join joined";
+      } else {
+        btn.textContent = "Ich bin dabei! \uD83D\uDE4B";
+        btn.className = "btn-join";
+      }
     }
+    // vote badge
+    var badge = document.getElementById("vbadge-" + id);
+    if (badge) {
+      var n = (votes[id] || []).length;
+      if (n > 0) { badge.textContent = n + " dabei"; badge.hidden = false; }
+      else { badge.hidden = true; }
+    }
+    // participants
+    var parts = document.getElementById("parts-" + id);
+    if (!parts) return;
+    var list = votes[id] || [];
+    if (!list.length) { parts.innerHTML = ""; return; }
+    var h = '<div class="participants-label">\uD83D\uDE4B Angemeldet (' + list.length + '):</div><div class="chips">';
+    for (var i = 0; i < list.length; i++) {
+      var isMe = list[i].toLowerCase() === userName.toLowerCase();
+      h += '<span class="chip' + (isMe ? " chip-me" : "") + '">' + escHtml(list[i]);
+      if (isMe) h += '<button class="chip-remove" data-activity="' + id + '" data-name="' + escHtml(list[i]) + '">\u2715</button>';
+      h += '</span>';
+    }
+    parts.innerHTML = h + '</div>';
   }
 
   // ── ACCORDION ────────────────────────────────
@@ -636,44 +865,96 @@
     header.setAttribute("aria-expanded", isOpen ? "false" : "true");
   }
 
-  // ── GLOBAL CLICK DELEGATION ───────────────────
+  // ── RESULTS ───────────────────────────────────
+  function renderResults() {
+    var container = document.getElementById("results-content");
+    if (!container) return;
+    var sorted = ACTIVITIES.slice().sort(function(a, b) {
+      return (votes[b.id] || []).length - (votes[a.id] || []).length;
+    });
+    var allNames = {};
+    Object.keys(votes).forEach(function(id) {
+      (votes[id] || []).forEach(function(n) { allNames[n.toLowerCase()] = true; });
+    });
+    var total = Object.keys(allNames).length;
+    var html = '<div class="results-header"><strong>' + total + '</strong> von ' + TOTAL_PEOPLE + ' haben abgestimmt</div>';
+    var hasVotes = sorted.some(function(a) { return (votes[a.id] || []).length > 0; });
+    if (!hasVotes) {
+      html += '<div class="results-empty">Noch keine Stimmen \u2013 sei der Erste! \uD83D\uDE4B</div>';
+      container.innerHTML = html;
+      return;
+    }
+    html += '<div class="results-list">';
+    for (var i = 0; i < sorted.length; i++) {
+      var act = sorted[i];
+      var list = votes[act.id] || [];
+      var isEmpty = list.length === 0;
+      html += '<div class="result-row' + (isEmpty ? " result-empty" : "") + '">';
+      html += '<div class="result-top"><span class="result-emoji">' + act.emoji + '</span>';
+      html += '<span class="result-name">' + escHtml(act.name) + '</span>';
+      if (!isEmpty) html += '<span class="result-count">' + list.length + '</span>';
+      html += '</div>';
+      if (!isEmpty) {
+        html += '<div class="result-names">';
+        for (var j = 0; j < list.length; j++) {
+          if (j) html += ' \u00B7 ';
+          var isMe = list[j].toLowerCase() === userName.toLowerCase();
+          html += '<span' + (isMe ? ' class="result-me"' : '') + '>' + escHtml(list[j]) + '</span>';
+        }
+        html += '</div>';
+      } else {
+        html += '<div class="result-names result-names-empty">Noch niemand</div>';
+      }
+      html += '</div>';
+    }
+    container.innerHTML = html + '</div>';
+  }
+
+  // ── GLOBAL EVENT DELEGATION ───────────────────
   document.addEventListener("click", function(e) {
-    // accordion toggle
-    var header = e.target.closest("[data-toggle]");
-    if (header) { toggleCard(header.getAttribute("data-toggle")); return; }
-
-    // join button
-    var joinBtn = e.target.closest("[data-join]");
-    if (joinBtn) { openModal(joinBtn.getAttribute("data-join")); return; }
-
-    // remove chip
-    var removeBtn = e.target.closest(".chip-remove");
-    if (removeBtn) {
-      var id   = removeBtn.getAttribute("data-activity");
-      var name = removeBtn.getAttribute("data-name");
+    // tabs
+    var tab = e.target.closest(".tab");
+    if (tab) {
+      document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); });
+      tab.classList.add("active");
+      var tabName = tab.getAttribute("data-tab");
+      document.getElementById("tab-vote").hidden    = (tabName !== "vote");
+      document.getElementById("tab-results").hidden = (tabName !== "results");
+      if (tabName === "results") renderResults();
+      return;
+    }
+    // accordion
+    var hdr = e.target.closest("[data-toggle]");
+    if (hdr) { toggleCard(hdr.getAttribute("data-toggle")); return; }
+    // join/leave
+    var jBtn = e.target.closest("[data-join]");
+    if (jBtn) { toggleJoin(jBtn.getAttribute("data-join")); return; }
+    // chip remove
+    var rBtn = e.target.closest(".chip-remove");
+    if (rBtn) {
+      var id = rBtn.getAttribute("data-activity");
+      var nm = rBtn.getAttribute("data-name");
       if (votes[id]) {
-        votes[id] = votes[id].filter(function(n) { return n !== name; });
-        saveVotes(votes);
-        renderParticipants(id);
+        votes[id] = votes[id].filter(function(n) { return n !== nm; });
+        saveVotes();
+        refreshCard(id);
         updateSummary();
+        if (!document.getElementById("tab-results").hidden) renderResults();
       }
       return;
     }
-
-    // close modal on overlay click
-    if (e.target === overlay) { closeModal(); }
+    // close name-change overlay
+    if (e.target === ncOverlay) ncOverlay.classList.remove("active");
   });
 
-  // keyboard: open accordion on Enter / Space
   document.addEventListener("keydown", function(e) {
     if (e.key !== "Enter" && e.key !== " ") return;
-    var header = e.target.closest("[data-toggle]");
-    if (header) { e.preventDefault(); toggleCard(header.getAttribute("data-toggle")); }
+    var hdr = e.target.closest("[data-toggle]");
+    if (hdr) { e.preventDefault(); toggleCard(hdr.getAttribute("data-toggle")); }
   });
 
   // ── INIT ─────────────────────────────────────
-  buildCards();
-  updateSummary();
+  initApp();
 </script>
 </body>
 </html>
