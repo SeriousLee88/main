@@ -113,6 +113,12 @@
       margin-top: 2px;
       line-height: 1.3;
     }
+    .card-distance {
+      font-size: .72rem;
+      color: var(--green-dark);
+      margin-top: 3px;
+      opacity: .8;
+    }
 
     .card-right {
       display: flex;
@@ -586,6 +592,7 @@
       dogs: "❌ Nicht erlaubt",
       website: "wildlands.de",
       hint: "Vorab online buchen!",
+      distance: "~36 km · ~35 Min.",
       rain: false
     },
     {
@@ -598,6 +605,7 @@
       dogs: "🔍 Bitte direkt beim Anbieter anfragen",
       website: "breelandrecreatie.nl",
       hint: "Gruppenanfrage per Mail empfohlen!",
+      distance: "~19 km · ~22 Min.",
       rain: false
     },
     {
@@ -610,6 +618,7 @@
       dogs: "✅ Ja, an der Leine erlaubt. Gassi-Bereich vorhanden, kostenlos.",
       website: "slagharen.com",
       hint: "Tickets online vorbuchen!",
+      distance: "~92 km · ~70 Min.",
       rain: false
     },
     {
@@ -622,6 +631,7 @@
       dogs: "❌ Nicht auf dem Pfad – im Wald drumherum an der Leine willkommen.",
       website: "staatsbosbeheer.nl",
       hint: null,
+      distance: "~20 km · ~22 Min.",
       rain: false
     },
     {
@@ -634,6 +644,7 @@
       dogs: "✅ Ja, kostenlos an Bord!",
       website: "zwaantje.nl",
       hint: "Vorab buchen – wird schnell ausgebucht!",
+      distance: "~95 km · ~75 Min.",
       rain: false
     },
     {
@@ -646,6 +657,7 @@
       dogs: "🔍 Bitte vorab anfragen",
       website: "gevangenismuseum.nl",
       hint: null,
+      distance: "~37 km · ~32 Min.",
       rain: true
     },
     {
@@ -658,6 +670,7 @@
       dogs: "❌ Nicht im Schwimmbadbereich",
       website: "hofvansaksen.nl",
       hint: null,
+      distance: "~27 km · ~27 Min.",
       rain: true
     },
     {
@@ -670,6 +683,7 @@
       dogs: "❌ Nicht erlaubt",
       website: "drentsmuseum.nl",
       hint: null,
+      distance: "~24 km · ~22 Min.",
       rain: true
     },
     {
@@ -682,6 +696,7 @@
       dogs: "🔍 Bitte vorab anfragen",
       website: "drentse-koe.nl",
       hint: null,
+      distance: "~67 km · ~60 Min.",
       rain: true
     }
   ];
@@ -909,7 +924,8 @@
       html += '<div class="card-header" role="button" tabindex="0" aria-expanded="false" data-toggle="' + a.id + '">';
       html += '<span class="card-emoji">' + a.emoji + '</span>';
       html += '<div class="card-title-wrap"><div class="card-title">' + escHtml(a.name) + '</div>';
-      html += '<div class="card-tagline">' + escHtml(a.tagline) + '</div></div>';
+      html += '<div class="card-tagline">' + escHtml(a.tagline) + '</div>';
+      html += '<div class="card-distance">\uD83D\uDE97 ' + escHtml(a.distance) + '</div></div>';
       html += '<div class="card-right">' + rb;
       html += '<span class="vote-badge" id="vbadge-' + a.id + '" hidden></span>';
       html += '<span class="chevron">&#9660;</span></div>';
