@@ -494,15 +494,6 @@
     .sync-dot.offline { background: #e07b39; }
     .sync-label { font-size: .75rem; opacity: .8; }
 
-    /* ── SETUP BANNER ────────────────────────── */
-    .setup-banner {
-      max-width: 480px; margin: 0 auto;
-      background: #fff8e6; border-bottom: 2px solid #e5b030;
-      padding: 10px 16px; font-size: .82rem; color: #7a5a00;
-      display: none; gap: 8px; align-items: flex-start;
-    }
-    .setup-banner.visible { display: flex; }
-    .setup-banner a { color: var(--green-dark); font-weight: 700; }
 
     /* ── NAME-CHANGE MODAL ───────────────────── */
     #name-change-overlay {
@@ -540,12 +531,6 @@
   <button class="btn-edit-name" id="btn-edit-name" title="Namen ändern">✏️</button>
 </div>
 
-<!-- ══ SETUP BANNER (hidden once Firebase configured) ══ -->
-<div class="setup-banner" id="setup-banner" hidden>
-  ⚠️ <span>Abstimmungen werden nur <strong>lokal</strong> gespeichert – andere sehen sie nicht.
-  <a href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase einrichten</a>
-  und Config in <code>index.html</code> eintragen, um Echtzeit-Sync zu aktivieren.</span>
-</div>
 
 <!-- ══ TABS ══════════════════════════════════ -->
 <div class="tab-bar">
@@ -745,7 +730,7 @@
   // ── FIREBASE INIT ─────────────────────────────
   function initFirebase() {
     if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.databaseURL) {
-      document.getElementById("setup-banner").classList.add("visible");
+      // Firebase not configured – silent fallback to localStorage
       setSyncLabel("lokal", "");
       return;
     }
@@ -753,7 +738,7 @@
       firebase.initializeApp(FIREBASE_CONFIG);
       db = firebase.database();
     } catch(e) {
-      document.getElementById("setup-banner").classList.add("visible");
+      // Firebase not configured – silent fallback to localStorage
       setSyncLabel("lokal", "");
       return;
     }
